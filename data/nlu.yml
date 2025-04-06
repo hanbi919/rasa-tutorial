@@ -66,7 +66,41 @@ nlu:
     - so good
     - so perfect
 
-- intent: mood_unhappy
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+- intent: subscribe
+  examples: |
+    - I want to get the newsletter
+    - Can you send me the newsletter?
+    - Can you sign me up for the newsletter?
+    - I want to subscribe to a newsletter.
+
+- intent: inform_email
+  examples: |
+    - My email is [example@example.com](email)
+    - [random@example.com](email)
+    - Please send it to [anything@example.com](email)
+    - Email is [something@example.com](email)
+
+- intent: inform_frequency
+  examples: |
+    - [once a week](frequency)
+    - [once](frequency)
+    - [once per week](frequency)
+    - [twice a week](frequency)
+    - [twice]{"entity": "frequency", "value": "twice a week"}
+    - [twice per week]{"entity": "frequency", "value": "twice a week"}
+
+- regex: email
+  examples: |
+    - \b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b
+
+
+- intent: mood_bad
   examples: |
     - my day was horrible
     - I am sad
@@ -83,9 +117,29 @@ nlu:
     - so saad
     - so sad
 
-- intent: bot_challenge
+- intent: ask_how_i_feel
   examples: |
-    - are you a bot?
-    - are you a human?
-    - am I talking to a bot?
-    - am I talking to a human?
+    - Ask me how I feel
+    - Do you want to know how I feel?
+    - Ask me about my feelings
+
+- intent: query_balance
+  examples: |
+    - 我的[中国银行](bank)余额是多少？
+    - 查一下[工商银行](bank)的卡里还有多少钱
+    - [张三](person)的[建设银行](bank)账户余额
+
+- intent: transfer_money
+  examples: |
+    - 给[李四](person)转100元
+    - 从[招商银行](bank)转账到[农业银行](bank)
+    - 请向[王五](person)的[交通银行](bank)账户转账500元
+
+# 定义查找表（指向对应的txt文件）
+- lookup: bank
+  examples: |
+    - data/lookup_tables/bank.txt
+
+- lookup: person
+  examples: |
+    - data/lookup_tables/person.txt

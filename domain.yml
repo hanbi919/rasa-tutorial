@@ -6,12 +6,44 @@ intents:
   - affirm
   - deny
   - mood_great
-  - mood_unhappy
   - bot_challenge
+  - subscribe
+  - inform_email
+  - inform_frequency
+  - mood_bad
+  - ask_how_i_feel
+  - query_balance
+  - transfer_money
+entities:
+  - email
+  - frequency
+  - bank
+  - person
 
+slots:
+  email:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: email
+    influence_conversation: false
+  frequency:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: frequency
+    influence_conversation: false
+
+forms:
+  newsletter_form:
+    required_slots:
+      - email
+      - frequency
+      
 responses:
   utter_greet:
   - text: "Hey! How are you?"
+  - text: "Hi, how's it going?"
 
   utter_cheer_up:
   - text: "Here is something to cheer you up:"
@@ -28,6 +60,23 @@ responses:
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
+
+  utter_ask_email:
+  - text: What is your email address?
+  
+  utter_ask_frequency:
+    - text: How often do you want to receive emails from me?
+    
+  utter_subscribed:
+    - text: You're all set! Check your inbox at {email} to confirm your subscription.
+            You will receive emails {frequency}.
+  utter_ask_user_question:
+    - text: How do you feel?
+  utter_great:
+    - text: Glad to hear that!
+  utter_bad:
+    - text: I'm sorry to hear that.
+
 
 session_config:
   session_expiration_time: 60

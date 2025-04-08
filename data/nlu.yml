@@ -138,8 +138,8 @@ nlu:
 # 定义查找表（指向对应的txt文件）
 - lookup: bank
   examples: |
-    - data/lookup_tables/bank.txt
+    - lookup_tables/bank.txt
 
 - lookup: person
   examples: |
-    - data/lookup_tables/person.txt
+    - lookup_tables/person.txt

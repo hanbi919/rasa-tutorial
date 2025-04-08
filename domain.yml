@@ -21,6 +21,16 @@ entities:
   - person
 
 slots:
+  bank:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: bank
+  person:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: person
   email:
     type: text
     mappings:
@@ -63,7 +73,12 @@ responses:
 
   utter_ask_email:
   - text: What is your email address?
-  
+    buttons:
+      - title: Work email
+        payload: /inform_email{{"email":"example@work.com"}}
+      - title: Personal email
+        payload: /inform_email{{"email":"example@home.com"}}  
+    image: http://gph.is/1LfEFeu
   utter_ask_frequency:
     - text: How often do you want to receive emails from me?
     

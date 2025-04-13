@@ -1,38 +1,95 @@
+# The config recipe.
+# https://rasa.com/docs/rasa/model-configuration/
 recipe: default.v1
-language: "zh"  # Set to English
 
-pipeline:
-  # - name: WhitespaceTokenizer
-  # - name: RegexFeaturizer
-  # - name: LexicalSyntacticFeaturizer
-  # - name: CountVectorsFeaturizer
-  # - name: CountVectorsFeaturizer
-  #   analyzer: "char_wb"
-  #   min_ngram: 1
-  #   max_ngram: 4
-  # - name: RegexEntityExtractor  # 加这个
-  # - name: DIETClassifier
-  #   epochs: 100
-  # - name: EntitySynonymMapper
-  # - name: ResponseSelector
-  #   epochs: 100
-  - name: JiebaTokenizer
-  - name: RegexFeaturizer
-  - name: LexicalSyntacticFeaturizer
-  - name: CountVectorsFeaturizer
-    analyzer: "char_wb"
-    min_ngram: 1
-    max_ngram: 4
-  - name: DIETClassifier
-    epochs: 100
-  - name: EntitySynonymMapper
+# The assistant project unique identifier
+# This default value must be replaced with a unique assistant name within your deployment
+assistant_id: 20250410-190948-numerous-system
+
+# Configuration for Rasa NLU.
+# https://rasa.com/docs/rasa/nlu/components/
+language: zh
+
+pipeline:  
+- name: JiebaTokenizer
+- name: RegexFeaturizer
+- name: LexicalSyntacticFeaturizer
+# - name: LanguageModelFeaturizer
+#   model_name: "bert"
+#   model_weights: "pipeline/bert-base-chinese"
+- name: CountVectorsFeaturizer
+  analyzer: "char_wb"
+  min_ngram: 1
+  max_ngram: 4
+- name: DIETClassifier
+  epochs: 100
+  learning_rate: 0.001
+  # tensorboard_log_directory: ./log
+  tensorboard_log_level: EPOCH
+  constrain_similarities: True
+  augmentation: 50 
+- name: FallbackClassifier
+  threshold: 0.7  # 意图识别置信度阈值（低于此值触发回退）
+  ambiguity_threshold: 0.1  # 可选：最高意图和第二意图的最小差值阈值
+- name: ResponseSelector
+  retrieval_intent: faq
+  epochs: 100
+  learning_rate: 0.001
+  constrain_similarities: True
+  scale_loss: false
+- name: ResponseSelector
+  retrieval_intent: chitchat
+  epochs: 100
+  learning_rate: 0.001
+  constrain_similarities: True
+  scale_loss: false
+- name: EntitySynonymMapper
+# # No configuration for the NLU pipeline was provided. The following default pipeline was used to train your model.
+# # If you'd like to customize it, uncomment and adjust the pipeline.
+# # See https://rasa.com/docs/rasa/tuning-your-model for more information.
+#   - name: WhitespaceTokenizer
+#   - name: RegexFeaturizer
+#   - name: LexicalSyntacticFeaturizer
+#   - name: CountVectorsFeaturizer
+#   - name: CountVectorsFeaturizer
+#     analyzer: char_wb
+#     min_ngram: 1
+#     max_ngram: 4
+#   - name: DIETClassifier
+#     epochs: 100
+#     constrain_similarities: true
+#   - name: EntitySynonymMapper
+#   - name: ResponseSelector
+#     epochs: 100
+#     constrain_similarities: true
+#   - name: FallbackClassifier
+#     threshold: 0.3
+#     ambiguity_threshold: 0.1
+
+# Configuration for Rasa Core.
+# https://rasa.com/docs/rasa/core/policies/
+
 policies:
 - name: MemoizationPolicy
+- name: RulePolicy
+  core_fallback_threshold: 0.3
+  core_fallback_action_name: "action_default_fallback"
+  enable_fallback_prediction: true
 - name: TEDPolicy
   max_history: 5
   epochs: 100
-- name: RulePolicy
-
-
-
-assistant_id: 20250406-171902-deafening-spot
+# - name: UnexpecTEDIntentPolicy
+#   max_history: 5
+#   epochs: 100
+# # No configuration for policies was provided. The following default policies were used to train your model.
+# # If you'd like to customize them, uncomment and adjust the policies.
+# # See https://rasa.com/docs/rasa/policies for more information.
+#   - name: MemoizationPolicy
+#   - name: RulePolicy
+#   - name: UnexpecTEDIntentPolicy
+#     max_history: 5
+#     epochs: 100
+#   - name: TEDPolicy
+#     max_history: 5
+#     epochs: 100
+#     constrain_similarities: true
